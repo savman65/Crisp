@@ -33,6 +33,7 @@ if __name__ == "__main__":
     # Replace with your own Azure Storage Account details
     storage_account_name = "crispsadsavitz"
     storage_account_key = os.getenv('sakey')
+    #storage_account_key = ""
     container_name = "crisp"
     local_target_directory = "./downloaded_files/"
 
