@@ -18,18 +18,9 @@ jobs:
       run: docker build . --file Dockerfile --tag crispreg2.azurecr.io/crisp:0.1
     
     - name: Set up Azure CLI
-      uses: azure/CLI@v1
+      uses: azure/login@v1
       with:
-        azcliversion: 2.0.72
-
-    - name: Login to Azure
-      env:
-        AZURE_CLIENT_ID: cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb
-        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        AZURE_SUBSCRIPTION_ID: 275ff156-2ec8-443d-b3b1-2008bc4cc207
-        AZURE_TENANT_ID: 137162b6-796d-4360-a8f4-8baa759ca5ec
-      run: |
-        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
     - name: Configure kubectl
       run: |
