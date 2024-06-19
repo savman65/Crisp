@@ -1,6 +1,7 @@
 name: Deploy Crisp App
 
 env:
+  dockertag: 0.1
   rgname: crisprg
   crispaks: crispaks
   crispsa: crispsa
@@ -20,6 +21,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Say Hello
+      run: echo "hello"
     
     - name: Set up Azure CLI
       uses: azure/login@v1
@@ -36,17 +39,17 @@ jobs:
      - name: Build the Docker image
        run: |
         az acr login --name $crispreg
-        docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:0.1
-        docker push $crispreg.azurecr.io/crisp:0.1
+        docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:$dockertag
+        docker push $crispreg.azurecr.io/crisp:{}
 
     - name: Configure kubectl
       run: |
-        az aks get-credentials --resource-group Crisp_group --name Crisp --overwrite-existing
+        az aks get-credentials --resource-group $crispreg --name $crispaks --overwrite-existing
 
     - name: Run kubectl command
       run: |
         kubectl get pods --all-namespaces
-        kubectl create secret docker-registry acr-secret \
+        kubectl create secret docker-registry acrsecret \
           --docker-server=crispreg.azurecr.io \
           --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb \
           --docker-password={tbd} \
@@ -56,5 +59,7 @@ jobs:
     - name: create k8s deployment
       run: |
         kubectl get pods --all-namespaces
-        kubectl apply -f /Users/mattsavitz/Documents/Dan2/deployment.yaml
-        kubectl delete -f /Users/mattsavitz/Documents/Dan2/deployment.yaml
+        sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
+        sed -i "s:{{tag}}:$dockertag:" deployment.yaml
+        kubectl apply -f deployment.yaml
+        kubectl delete -f deployment.yaml
