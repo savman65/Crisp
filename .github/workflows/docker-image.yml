@@ -14,13 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag crispreg2.azurecr.io/crisp:0.1
     
     - name: Set up Azure CLI
       uses: azure/login@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
+
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag crispreg2.azurecr.io/crisp:0.1
+        docker push crispreg2.azurecr.io/crisp:0.1
 
     - name: Configure kubectl
       run: |
