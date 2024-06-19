@@ -9,50 +9,50 @@ env:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Say Hello
-      run: echo "hello"
-    
-    - name: Set up Azure CLI
-      uses: azure/login@v1
-      with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-    
-    - name: Deploy Infrastructure
-      run: |
-        az group create --name $rgname --location eastus2
-        az group deployment create --resource-group $rgname --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
-        az group deployment create --resource-group $rgname --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
-        az group deployment create --resource-group $rgname --template-file arm_templates/acr.json --parameters registry_name=$crispreg
-        
-     - name: Build the Docker image
-       run: |
-        az acr login --name $crispreg
-        docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:$dockertag
-        docker push $crispreg.azurecr.io/crisp:{}
+      - uses: actions/checkout@v4
+      - name: Say Hello
+        run: echo "hello"
 
-    - name: Configure kubectl
-      run: |
-        az aks get-credentials --resource-group $crispreg --name $crispaks --overwrite-existing
+      - name: Set up Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}"
 
-    - name: Run kubectl command
-      run: |
-        kubectl get pods --all-namespaces
-        kubectl create secret docker-registry acrsecret --docker-server=crispreg.azurecr.io --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb --docker-password={tbd} --docker-email=savitz.daniel@gmail.com
-        kubectl create secret generic sakey --from-literal=sakey={needKey}
+      - name: Deploy Infrastructure
+        run: |
+          az group create --name $rgname --location eastus2
+          az group deployment create --resource-group $rgname --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
+          az group deployment create --resource-group $rgname --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
+          az group deployment create --resource-group $rgname --template-file arm_templates/acr.json --parameters registry_name=$crispreg
 
-    - name: create k8s deployment
-      run: |
-        kubectl get pods --all-namespaces
-        sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
-        sed -i "s:{{tag}}:$dockertag:" deployment.yaml
-        kubectl apply -f deployment.yaml
-        kubectl delete -f deployment.yaml
+      - name: Build the Docker image
+        run: |
+          az acr login --name $crispreg
+          docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:$dockertag
+          docker push $crispreg.azurecr.io/crisp:{}
+
+      - name: Configure kubectl
+        run: |
+          az aks get-credentials --resource-group $crispreg --name $crispaks --overwrite-existing
+
+      - name: Run kubectl command
+        run: |
+          kubectl get pods --all-namespaces
+          kubectl create secret docker-registry acrsecret --docker-server=crispreg.azurecr.io --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb --docker-password={tbd} --docker-email=savitz.daniel@gmail.com
+          kubectl create secret generic sakey --from-literal=sakey={needKey}
+
+      - name: create k8s deployment
+        run: |
+          kubectl get pods --all-namespaces
+          sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
+          sed -i "s:{{tag}}:$dockertag:" deployment.yaml
+          kubectl apply -f deployment.yaml
+          kubectl delete -f deployment.yaml
