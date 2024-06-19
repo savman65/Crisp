@@ -148,7 +148,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storage_account_name'), '/default/pasquet')]",
+            "name": "[concat(parameters('storage_account_name'), '/default/parquet')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storage_account_name'), 'default')]",
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
