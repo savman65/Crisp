@@ -1,11 +1,11 @@
 name: Deploy Crisp App
 
 env:
-  dockertag: 0.1
-  rgname: crisprg
-  crispaks: crispaks
-  crispsa: crispsa
-  crispreg: crispreg
+  dockertag: "0.1"
+  rgname: "crisprg"
+  crispaks: "crispaks"
+  crispsa: "crispsa"
+  crispreg: "crispreg"
 
 on:
   push:
@@ -14,11 +14,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Say Hello
