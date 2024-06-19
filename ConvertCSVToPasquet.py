@@ -4,13 +4,13 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 import os
 
-storage_account_name = "crisp_storage_account"
+storage_account_name = os.getenv('crispsa')
 storage_account_key = os.getenv('crispsakey')
 #for local testing
 #storage_account_key = ""
 source_container_name = "csv"
 local_target_directory = "./blob_files/"
-blobName = 'crisp'
+blobName = os.getenv('crispsablobname')
 
 def download_blob(storage_account_name, storage_account_key, container_name, local_target_directory):
     # Construct the BlobServiceClient using the account key

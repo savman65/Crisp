@@ -1,11 +1,12 @@
 name: Deploy Crisp App
 
 env:
-  dockertag: "0.1"
+  dockertag: "0.2"
   crisprg: "crisprg"
   crispaks: "crispaks"
   crispsa: "crispsadsavitz"
   crispreg: "crispreg"
+  crispsablobname: "crisp"
 
 on:
   push:
@@ -70,6 +71,8 @@ jobs:
           kubectl get pods --all-namespaces
           sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
           sed -i "s:{{tag}}:$dockertag:" deployment.yaml
+          sed -i "s:{{crispsa}}:$crispsa:" deployment.yaml
+          sed -i "s:{{crispsablobname}}:$crispsablobname:" deployment.yaml
           kubectl apply -f deployment.yaml
           PODS=$(kubectl get pods -l app=crisp -o jsonpath='{.items[*].metadata.name}')
           # Loop through each pod and get logs
