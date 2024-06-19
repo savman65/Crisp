@@ -73,6 +73,7 @@ jobs:
           sed -i "s:{{tag}}:$dockertag:" deployment.yaml
           sed -i "s:{{crispsa}}:$crispsa:" deployment.yaml
           sed -i "s:{{crispsablobname}}:$crispsablobname:" deployment.yaml
+          kubectl delete -f deployment.yaml
           kubectl apply -f deployment.yaml
           PODS=$(kubectl get pods -l app=crisp -o jsonpath='{.items[*].metadata.name}')
           # Loop through each pod and get logs
@@ -81,4 +82,3 @@ jobs:
             kubectl logs $POD
           done
           #kubectl logs
-          #kubectl delete -f deployment.yaml
