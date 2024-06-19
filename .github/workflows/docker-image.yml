@@ -46,11 +46,7 @@ jobs:
     - name: Run kubectl command
       run: |
         kubectl get pods --all-namespaces
-        kubectl create secret docker-registry acrsecret \
-          --docker-server=crispreg.azurecr.io \
-          --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb \
-          --docker-password={tbd} \
-          --docker-email=savitz.daniel@gmail.com
+        kubectl create secret docker-registry acrsecret --docker-server=crispreg.azurecr.io --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb --docker-password={tbd} --docker-email=savitz.daniel@gmail.com
         kubectl create secret generic sakey --from-literal=sakey={needKey}
 
     - name: create k8s deployment
