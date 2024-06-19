@@ -47,10 +47,23 @@ jobs:
       - name: Run kubectl command
         run: |
           kubectl get pods --all-namespaces
-          kubectl create secret docker-registry acrsecret --docker-server=crispreg.azurecr.io --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb --docker-password=${{ secrets.AZURE_CLIENT_SECRET }} --docker-email=savitz.daniel@gmail.com
-          crispsakey=$(az storage account keys list --resource-group $crisprg --account-name $crispsa --query '[0].value' --output tsv)
-          echo "##[set-output name=crispsakey;]$crispsakey"
-          kubectl create secret generic crispsakey-secret --from-literal=crispsakey=$crispsakey
+
+          kubectl get secret acrsecret >/dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "Secret acrsecret does not exist. Creating it..."
+            kubectl create secret docker-registry acrsecret --docker-server=crispreg.azurecr.io --docker-username=cfff6db8-6ea9-4769-a9c4-3f5f2caa71fb --docker-password=${{ secrets.AZURE_CLIENT_SECRET }} --docker-email=savitz.daniel@gmail.com
+          else
+            echo "Secret acrsecret already exists. Skipping creation."
+          fi
+
+          kubectl get secret crispsakey-secret >/dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            crispsakey=$(az storage account keys list --resource-group $crisprg --account-name $crispsa --query '[0].value' --output tsv)
+            echo "##[set-output name=crispsakey;]$crispsakey"
+            kubectl create secret generic crispsakey-secret --from-literal=crispsakey=$crispsakey 
+          else
+            echo "Secret acrsecret already exists. Skipping creation."
+          fi
 
       - name: create k8s deployment
         run: |
