@@ -24,7 +24,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sakey
-              key: key
+              key: sakey
         resources:
           requests:
             memory: "64Mi"
