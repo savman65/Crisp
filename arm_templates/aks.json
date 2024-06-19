@@ -2,16 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "managedClusters_Crisp_name": {
-            "defaultValue": "Crisp",
-            "type": "String"
-        },
-        "publicIPAddresses_b097d19b_c13e_42d2_a14c_2a86fc70a77a_externalid": {
-            "defaultValue": "/subscriptions/275ff156-2ec8-443d-b3b1-2008bc4cc207/resourceGroups/MC_Crisp_group_Crisp_eastus2/providers/Microsoft.Network/publicIPAddresses/b097d19b-c13e-42d2-a14c-2a86fc70a77a",
-            "type": "String"
-        },
-        "userAssignedIdentities_Crisp_agentpool_externalid": {
-            "defaultValue": "/subscriptions/275ff156-2ec8-443d-b3b1-2008bc4cc207/resourceGroups/MC_Crisp_group_Crisp_eastus2/providers/Microsoft.ManagedIdentity/userAssignedIdentities/Crisp-agentpool",
+        "aks_cluster_name": {
+            "defaultValue": "CrispAKS",
             "type": "String"
         }
     },
@@ -20,7 +12,7 @@
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2024-03-02-preview",
-            "name": "[parameters('managedClusters_Crisp_name')]",
+            "name": "[parameters('aks_cluster_name')]",
             "location": "eastus2",
             "sku": {
                 "name": "Base",
@@ -32,7 +24,7 @@
             },
             "properties": {
                 "kubernetesVersion": "1.28.9",
-                "dnsPrefix": "[concat(parameters('managedClusters_Crisp_name'), '-dns')]",
+                "dnsPrefix": "[concat(parameters('aks_cluster_name'), '-dns')]",
                 "agentPoolProfiles": [
                     {
                         "name": "agentpool",
@@ -74,7 +66,7 @@
                         "enabled": false
                     }
                 },
-                "nodeResourceGroup": "[concat('MC_', parameters('managedClusters_Crisp_name'), '_group_', parameters('managedClusters_Crisp_name'), '_eastus2')]",
+                "nodeResourceGroup": "[concat('MC_', parameters('aks_cluster_name'), '_group_', parameters('aks_cluster_name'), '_eastus2')]",
                 "enableRBAC": true,
                 "supportPlan": "KubernetesOfficial",
                 "networkProfile": {
@@ -126,9 +118,9 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2024-03-02-preview",
-            "name": "[concat(parameters('managedClusters_Crisp_name'), '/agentpool')]",
+            "name": "[concat(parameters('aks_cluster_name'), '/agentpool')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_Crisp_name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aks_cluster_name'))]"
             ],
             "properties": {
                 "count": 1,
@@ -161,9 +153,9 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/maintenanceConfigurations",
             "apiVersion": "2024-03-02-preview",
-            "name": "[concat(parameters('managedClusters_Crisp_name'), '/aksManagedAutoUpgradeSchedule')]",
+            "name": "[concat(parameters('aks_cluster_name'), '/aksManagedAutoUpgradeSchedule')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_Crisp_name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aks_cluster_name'))]"
             ],
             "properties": {
                 "maintenanceWindow": {
@@ -183,9 +175,9 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/maintenanceConfigurations",
             "apiVersion": "2024-03-02-preview",
-            "name": "[concat(parameters('managedClusters_Crisp_name'), '/aksManagedNodeOSUpgradeSchedule')]",
+            "name": "[concat(parameters('aks_cluster_name'), '/aksManagedNodeOSUpgradeSchedule')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_Crisp_name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aks_cluster_name'))]"
             ],
             "properties": {
                 "maintenanceWindow": {

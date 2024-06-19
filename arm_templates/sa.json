@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "storageAccounts_crispsadsavitz_name": {
+        "storage_account_name": {
             "defaultValue": "crisp_storage_account",
             "type": "String"
         }
@@ -12,7 +12,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2023-05-01",
-            "name": "[parameters('storageAccounts_crispsadsavitz_name')]",
+            "name": "[parameters('storage_account_name')]",
             "location": "eastus2",
             "sku": {
                 "name": "Standard_LRS",
@@ -55,9 +55,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storageAccounts_crispsadsavitz_name'), '/default')]",
+            "name": "[concat(parameters('storage_account_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_crispsadsavitz_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
             ],
             "sku": {
                 "name": "Standard_LRS",
@@ -81,9 +81,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storageAccounts_crispsadsavitz_name'), '/default')]",
+            "name": "[concat(parameters('storage_account_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_crispsadsavitz_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
             ],
             "sku": {
                 "name": "Standard_LRS",
@@ -105,9 +105,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/queueServices",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storageAccounts_crispsadsavitz_name'), '/default')]",
+            "name": "[concat(parameters('storage_account_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_crispsadsavitz_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
             ],
             "properties": {
                 "cors": {
@@ -118,9 +118,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/tableServices",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storageAccounts_crispsadsavitz_name'), '/default')]",
+            "name": "[concat(parameters('storage_account_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_crispsadsavitz_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
             ],
             "properties": {
                 "cors": {
@@ -131,10 +131,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storageAccounts_crispsadsavitz_name'), '/default/csv')]",
+            "name": "[concat(parameters('storage_account_name'), '/default/csv')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_crispsadsavitz_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_crispsadsavitz_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storage_account_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
             ],
             "properties": {
                 "immutableStorageWithVersioning": {
@@ -148,10 +148,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2023-05-01",
-            "name": "[concat(parameters('storageAccounts_crispsadsavitz_name'), '/default/pasquet')]",
+            "name": "[concat(parameters('storage_account_name'), '/default/pasquet')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_crispsadsavitz_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_crispsadsavitz_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storage_account_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
             ],
             "properties": {
                 "immutableStorageWithVersioning": {

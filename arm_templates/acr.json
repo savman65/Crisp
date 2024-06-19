@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "registries_CrispReg2_name": {
-            "defaultValue": "CrispReg2",
+        "registry_name": {
+            "defaultValue": "CrispReg",
             "type": "String"
         }
     },
@@ -12,7 +12,7 @@
         {
             "type": "Microsoft.ContainerRegistry/registries",
             "apiVersion": "2023-11-01-preview",
-            "name": "[parameters('registries_CrispReg2_name')]",
+            "name": "[parameters('registry_name')]",
             "location": "eastus2",
             "sku": {
                 "name": "Standard",
@@ -57,9 +57,9 @@
         {
             "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
             "apiVersion": "2023-11-01-preview",
-            "name": "[concat(parameters('registries_CrispReg2_name'), '/_repositories_admin')]",
+            "name": "[concat(parameters('registry_name'), '/_repositories_admin')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_CrispReg2_name'))]"
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]"
             ],
             "properties": {
                 "description": "Can perform all read, write and delete operations on the registry",
@@ -75,9 +75,9 @@
         {
             "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
             "apiVersion": "2023-11-01-preview",
-            "name": "[concat(parameters('registries_CrispReg2_name'), '/_repositories_pull')]",
+            "name": "[concat(parameters('registry_name'), '/_repositories_pull')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_CrispReg2_name'))]"
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]"
             ],
             "properties": {
                 "description": "Can pull any repository of the registry",
@@ -89,9 +89,9 @@
         {
             "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
             "apiVersion": "2023-11-01-preview",
-            "name": "[concat(parameters('registries_CrispReg2_name'), '/_repositories_pull_metadata_read')]",
+            "name": "[concat(parameters('registry_name'), '/_repositories_pull_metadata_read')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_CrispReg2_name'))]"
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]"
             ],
             "properties": {
                 "description": "Can perform all read operations on the registry",
@@ -104,9 +104,9 @@
         {
             "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
             "apiVersion": "2023-11-01-preview",
-            "name": "[concat(parameters('registries_CrispReg2_name'), '/_repositories_push')]",
+            "name": "[concat(parameters('registry_name'), '/_repositories_push')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_CrispReg2_name'))]"
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]"
             ],
             "properties": {
                 "description": "Can push to any repository of the registry",
@@ -119,9 +119,9 @@
         {
             "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
             "apiVersion": "2023-11-01-preview",
-            "name": "[concat(parameters('registries_CrispReg2_name'), '/_repositories_push_metadata_write')]",
+            "name": "[concat(parameters('registry_name'), '/_repositories_push_metadata_write')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_CrispReg2_name'))]"
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]"
             ],
             "properties": {
                 "description": "Can perform all read and write operations on the registry",
@@ -136,13 +136,13 @@
         {
             "type": "Microsoft.ContainerRegistry/registries/tokens",
             "apiVersion": "2023-11-01-preview",
-            "name": "[concat(parameters('registries_CrispReg2_name'), '/crisp')]",
+            "name": "[concat(parameters('registry_name'), '/crisp')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_CrispReg2_name'))]",
-                "[resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', parameters('registries_CrispReg2_name'), '_repositories_admin')]"
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]",
+                "[resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', parameters('registry_name'), '_repositories_admin')]"
             ],
             "properties": {
-                "scopeMapId": "[resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', parameters('registries_CrispReg2_name'), '_repositories_admin')]",
+                "scopeMapId": "[resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', parameters('registry_name'), '_repositories_admin')]",
                 "credentials": {
                     "passwords": [
                         {
