@@ -4,6 +4,14 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 import os
 
+storage_account_name = "crisp_storage_account"
+storage_account_key = os.getenv('crispsakey')
+#for local testing
+#storage_account_key = ""
+source_container_name = "csv"
+local_target_directory = "./blob_files/"
+blobName = 'crisp'
+
 def download_blob(storage_account_name, storage_account_key, container_name, local_target_directory):
     # Construct the BlobServiceClient using the account key
     blob_service_client = BlobServiceClient(
@@ -38,15 +46,7 @@ def upload_blob_to_azure(connection_string, container_name, blob_name, parquet_f
         blob_client.upload_blob(data, overwrite=True)
 
 if __name__ == "__main__":
-    storage_account_name = "crisp_storage_account"
-    storage_account_key = os.getenv('sakey')
-    #storage_account_key = ""
-    source_container_name = "csv"
-    local_target_directory = "./downloaded_files/"
-    blobName = 'crisp'
     
-
-    # Call the function to download the container
     download_blob(storage_account_name, storage_account_key, source_container_name, local_target_directory)
 
     # Read CSV file into pandas DataFrame
@@ -55,8 +55,7 @@ if __name__ == "__main__":
     # Specify the output Parquet file
     #parquet_file = '{blobName}.parquet'
 
-    # Option 1: Using pyarrow for Parquet writing
-    # Ensure to have pyarrow installed: pip install pyarrow
+    #pyarrow for Parquet writing
     df.to_parquet(f"{local_target_directory}/{blobName}.parquet", engine='pyarrow')
 
     # Option 2: Using fastparquet for Parquet writing
@@ -64,7 +63,6 @@ if __name__ == "__main__":
     # df.to_parquet(parquet_file, engine='fastparquet')
 
     print(f"CSV file '{blobName}.csv' converted to Parquet file '{blobName}.parquet' successfully.")
-
 
     connection_string = f"DefaultEndpointsProtocol=https;AccountName=crispsadsavitz;AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
 

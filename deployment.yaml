@@ -16,16 +16,16 @@ spec:
     spec:
       containers:
       - name: crisp
-        image: crispreg2.azurecr.io/crisp:0.1
+        image: {{crispacr}}.azurecr.io/crisp:{{tag}}
         ports:
         - containerPort: 80
         imagePullPolicy: Always
         env:
-        - name: sakey
+        - name: crispsakey
           valueFrom:
             secretKeyRef:
-              name: sakey
-              key: sakey
+              name: crispsakey-secret
+              key: crispsakey
         resources:
           requests:
             memory: "64Mi"
@@ -34,4 +34,4 @@ spec:
             memory: "128Mi"
             cpu: "500m"
       imagePullSecrets:
-      - name: acr-secret
+      - name: acrsecret

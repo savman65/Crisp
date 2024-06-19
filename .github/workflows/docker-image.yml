@@ -1,10 +1,10 @@
 name: Deploy Crisp App
 
 env:
-  rg_name: crisp_rg
-  crisp_aks: crisp_aks
-  crisp_sa: crisp_sa
-  crisp_reg: crisp_reg
+  rgname: crisprg
+  crispaks: crispaks
+  crispsa: crispsa
+  crispreg: crispreg
 
 on:
   push:
@@ -25,21 +25,19 @@ jobs:
       uses: azure/login@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-
-    - name: Build the Docker image
-      run: |
-        
-        az acr login --name crispreg2
-        docker build . --file Dockerfile --tag crispreg2.azurecr.io/crisp:0.1
-        docker push crispreg2.azurecr.io/crisp:0.1
     
     - name: Deploy Infrastructure
       run: |
-        az group create --name $rg_name --location eastus2
-        az group deployment create --resource-group $rg_name --template-file arm_templates/aks.json --parameters aks_cluster_name=$crisp_aks
-        az group deployment create --resource-group $rg_name --template-file arm_templates/sa.json --parameters storage_account_name=$crisp_sa
-        az group deployment create --resource-group $rg_name --template-file arm_templates/acr.json --parameters registry_name=$crisp_reg
+        az group create --name $rgname --location eastus2
+        az group deployment create --resource-group $rgname --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
+        az group deployment create --resource-group $rgname --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
+        az group deployment create --resource-group $rgname --template-file arm_templates/acr.json --parameters registry_name=$crispreg
         
+     - name: Build the Docker image
+       run: |
+        az acr login --name $crispreg
+        docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:0.1
+        docker push $crispreg.azurecr.io/crisp:0.1
 
     - name: Configure kubectl
       run: |

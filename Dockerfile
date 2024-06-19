@@ -10,10 +10,10 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-RUN chmod u+x ./ConvertCSVToPasquet.py
+RUN chmod u+x ./convertcsvtopasquet.py
 
 # Install any needed packages specified in requirements.txt
 #RUN pip install --no-cache-dir -r requirements.txt
 
 # Run app.py when the container launches
-CMD ["python", "./ConvertCSVToPasquet.py"]
+CMD ["python", "./convertcsvtopasquet.py"]
