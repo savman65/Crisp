@@ -62,7 +62,7 @@ jobs:
             echo "##[set-output name=crispsakey;]$crispsakey"
             kubectl create secret generic crispsakey-secret --from-literal=crispsakey=$crispsakey 
           else
-            echo "Secret acrsecret already exists. Skipping creation."
+            echo "Secret crispsakey-secret already exists. Skipping creation."
           fi
 
       - name: create k8s deployment
@@ -71,5 +71,11 @@ jobs:
           sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
           sed -i "s:{{tag}}:$dockertag:" deployment.yaml
           kubectl apply -f deployment.yaml
+          PODS=$(kubectl get pods -l app=crisp -o jsonpath='{.items[*].metadata.name}')
+          # Loop through each pod and get logs
+          for POD in $PODS; do
+            echo "Logs for pod: $POD"
+            kubectl logs $POD
+          done
           #kubectl logs
           #kubectl delete -f deployment.yaml
