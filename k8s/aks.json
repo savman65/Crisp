@@ -1,0 +1,206 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "managedClusters_Crisp_name": {
+            "defaultValue": "Crisp",
+            "type": "String"
+        },
+        "publicIPAddresses_b097d19b_c13e_42d2_a14c_2a86fc70a77a_externalid": {
+            "defaultValue": "/subscriptions/275ff156-2ec8-443d-b3b1-2008bc4cc207/resourceGroups/MC_Crisp_group_Crisp_eastus2/providers/Microsoft.Network/publicIPAddresses/b097d19b-c13e-42d2-a14c-2a86fc70a77a",
+            "type": "String"
+        },
+        "userAssignedIdentities_Crisp_agentpool_externalid": {
+            "defaultValue": "/subscriptions/275ff156-2ec8-443d-b3b1-2008bc4cc207/resourceGroups/MC_Crisp_group_Crisp_eastus2/providers/Microsoft.ManagedIdentity/userAssignedIdentities/Crisp-agentpool",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2024-03-02-preview",
+            "name": "[parameters('managedClusters_Crisp_name')]",
+            "location": "eastus2",
+            "sku": {
+                "name": "Base",
+                "tier": "Free"
+            },
+            "kind": "Base",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "kubernetesVersion": "1.28.9",
+                "dnsPrefix": "[concat(parameters('managedClusters_Crisp_name'), '-dns')]",
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "count": 1,
+                        "vmSize": "Standard_D4ds_v5",
+                        "osDiskSizeGB": 128,
+                        "osDiskType": "Ephemeral",
+                        "kubeletDiskType": "OS",
+                        "maxPods": 110,
+                        "type": "VirtualMachineScaleSets",
+                        "enableAutoScaling": false,
+                        "powerState": {
+                            "code": "Running"
+                        },
+                        "orchestratorVersion": "1.28.9",
+                        "enableNodePublicIP": false,
+                        "mode": "System",
+                        "osType": "Linux",
+                        "osSKU": "Ubuntu",
+                        "upgradeSettings": {
+                            "maxSurge": "10%"
+                        },
+                        "enableFIPS": false,
+                        "securityProfile": {
+                            "sshAccess": "LocalUser",
+                            "enableVTPM": false,
+                            "enableSecureBoot": false
+                        }
+                    }
+                ],
+                "servicePrincipalProfile": {
+                    "clientId": "msi"
+                },
+                "addonProfiles": {
+                    "azureKeyvaultSecretsProvider": {
+                        "enabled": false
+                    },
+                    "azurepolicy": {
+                        "enabled": false
+                    }
+                },
+                "nodeResourceGroup": "[concat('MC_', parameters('managedClusters_Crisp_name'), '_group_', parameters('managedClusters_Crisp_name'), '_eastus2')]",
+                "enableRBAC": true,
+                "supportPlan": "KubernetesOfficial",
+                "networkProfile": {
+                    "networkPlugin": "kubenet",
+                    "networkPolicy": "none",
+                    "loadBalancerSku": "Standard",
+                    "loadBalancerProfile": {
+                        "managedOutboundIPs": {
+                            "count": 1
+                        },
+                        "backendPoolType": "nodeIPConfiguration"
+                    }
+                },
+                "autoUpgradeProfile": {
+                    "upgradeChannel": "patch",
+                    "nodeOSUpgradeChannel": "NodeImage"
+                },
+                "disableLocalAccounts": false,
+                "securityProfile": {},
+                "storageProfile": {
+                    "diskCSIDriver": {
+                        "enabled": true,
+                        "version": "v1"
+                    },
+                    "fileCSIDriver": {
+                        "enabled": true
+                    },
+                    "snapshotController": {
+                        "enabled": true
+                    }
+                },
+                "oidcIssuerProfile": {
+                    "enabled": false
+                },
+                "workloadAutoScalerProfile": {},
+                "metricsProfile": {
+                    "costAnalysis": {
+                        "enabled": false
+                    }
+                },
+                "nodeProvisioningProfile": {
+                    "mode": "Manual"
+                },
+                "bootstrapProfile": {
+                    "artifactSource": "Direct"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools",
+            "apiVersion": "2024-03-02-preview",
+            "name": "[concat(parameters('managedClusters_Crisp_name'), '/agentpool')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_Crisp_name'))]"
+            ],
+            "properties": {
+                "count": 1,
+                "vmSize": "Standard_D4ds_v5",
+                "osDiskSizeGB": 128,
+                "osDiskType": "Ephemeral",
+                "kubeletDiskType": "OS",
+                "maxPods": 110,
+                "type": "VirtualMachineScaleSets",
+                "enableAutoScaling": false,
+                "powerState": {
+                    "code": "Running"
+                },
+                "orchestratorVersion": "1.28.9",
+                "enableNodePublicIP": false,
+                "mode": "System",
+                "osType": "Linux",
+                "osSKU": "Ubuntu",
+                "upgradeSettings": {
+                    "maxSurge": "10%"
+                },
+                "enableFIPS": false,
+                "securityProfile": {
+                    "sshAccess": "LocalUser",
+                    "enableVTPM": false,
+                    "enableSecureBoot": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/maintenanceConfigurations",
+            "apiVersion": "2024-03-02-preview",
+            "name": "[concat(parameters('managedClusters_Crisp_name'), '/aksManagedAutoUpgradeSchedule')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_Crisp_name'))]"
+            ],
+            "properties": {
+                "maintenanceWindow": {
+                    "schedule": {
+                        "weekly": {
+                            "intervalWeeks": 1,
+                            "dayOfWeek": "Sunday"
+                        }
+                    },
+                    "durationHours": 4,
+                    "utcOffset": "+00:00",
+                    "startDate": "2024-06-20",
+                    "startTime": "00:00"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/maintenanceConfigurations",
+            "apiVersion": "2024-03-02-preview",
+            "name": "[concat(parameters('managedClusters_Crisp_name'), '/aksManagedNodeOSUpgradeSchedule')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_Crisp_name'))]"
+            ],
+            "properties": {
+                "maintenanceWindow": {
+                    "schedule": {
+                        "weekly": {
+                            "intervalWeeks": 1,
+                            "dayOfWeek": "Sunday"
+                        }
+                    },
+                    "durationHours": 4,
+                    "utcOffset": "+00:00",
+                    "startDate": "2024-06-20",
+                    "startTime": "00:00"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "aksClusterName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Kubernetes Service (AKS) cluster."
+      }
+    },
+    "aksServicePrincipalClientId": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Service principal client ID used by AKS to access Azure APIs."
+      }
+    },
+    "aksServicePrincipalClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Service principal client secret used by AKS to access Azure APIs."
+      }
+    },
+    "aksNodeCount": {
+      "type": "int",
+      "defaultValue": 3,
+      "metadata": {
+        "description": "Number of nodes in the AKS cluster."
+      }
+    },
+    "aksNodeVMSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS2_v2",
+      "metadata": {
+        "description": "VM size for AKS nodes."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ContainerService/managedClusters",
+      "apiVersion": "2021-05-01",
+      "name": "[parameters('aksClusterName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "kubernetesVersion": "1.21.2",
+        "enableRBAC": true,
+        "dnsPrefix": "[parameters('aksClusterName')]",
+        "agentPoolProfiles": [
+          {
+            "name": "nodepool1",
+            "count": "[parameters('aksNodeCount')]",
+            "vmSize": "[parameters('aksNodeVMSize')]",
+            "osType": "Linux",
+            "mode": "System"
+          }
+        ],
+        "servicePrincipalProfile": {
+          "clientId": "[parameters('aksServicePrincipalClientId')]",
+          "secret": "[parameters('aksServicePrincipalClientSecret')]"
+        }
+      }
+    }
+  ]
+}
