@@ -58,4 +58,5 @@ jobs:
           sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
           sed -i "s:{{tag}}:$dockertag:" deployment.yaml
           kubectl apply -f deployment.yaml
-          kubectl delete -f deployment.yaml
+          #kubectl logs
+          #kubectl delete -f deployment.yaml
