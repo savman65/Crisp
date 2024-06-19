@@ -22,6 +22,7 @@ jobs:
 
     - name: Build the Docker image
       run: |
+        az acr login --name crispreg2
         docker build . --file Dockerfile --tag crispreg2.azurecr.io/crisp:0.1
         docker push crispreg2.azurecr.io/crisp:0.1
 
