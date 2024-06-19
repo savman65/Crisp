@@ -9,6 +9,7 @@ storage_account_key = os.getenv('crispsakey')
 #for local testing
 #storage_account_key = ""
 source_container_name = "csv"
+destination_container_name = "parquet"
 local_target_directory = "./blob_files/"
 blobName = os.getenv('crispsablobname')
 
@@ -64,9 +65,9 @@ if __name__ == "__main__":
 
     print(f"CSV file '{blobName}.csv' converted to Parquet file '{blobName}.parquet' successfully.")
 
-    connection_string = f"DefaultEndpointsProtocol=https;AccountName=crispsadsavitz;AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
+    connection_string = f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
 
-    upload_blob_to_azure(connection_string, container_name, f"{blobName}.parquet", f"./{blobName}.parquet")
+    upload_blob_to_azure(connection_string, destination_container_name, f"{blobName}.parquet", f"./{blobName}.parquet")
 
 
 
