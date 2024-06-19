@@ -27,7 +27,7 @@ jobs:
 
     - name: Configure kubectl
       run: |
-        az aks get-credentials --resource-group Crisp2_group --name Crisp --overwrite-existing
+        az aks get-credentials --resource-group Crisp_group --name Crisp --overwrite-existing
 
     - name: Run kubectl command
       run: |
