@@ -140,19 +140,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registry_name'))]",
                 "[resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', parameters('registry_name'), '_repositories_admin')]"
-            ],
-            "properties": {
-                "scopeMapId": "[resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', parameters('registry_name'), '_repositories_admin')]",
-                "credentials": {
-                    "passwords": [
-                        {
-                            "creationTime": "2024-06-19T16:46:37.2770456+00:00",
-                            "name": "password1"
-                        }
-                    ]
-                },
-                "status": "enabled"
-            }
+            ]
         }
     ]
 }
