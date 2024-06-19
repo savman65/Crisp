@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     connection_string = f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
 
-    upload_blob_to_azure(connection_string, destination_container_name, f"{blobName}.parquet", f"./{blobName}.parquet")
+    upload_blob_to_azure(connection_string, destination_container_name, f"{blobName}.parquet", f"./{local_target_directory}/{blobName}.parquet")
 
 
 
