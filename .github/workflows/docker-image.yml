@@ -4,7 +4,7 @@ env:
   dockertag: "0.1"
   rgname: "crisprg"
   crispaks: "crispaks"
-  crispsa: "crispsa"
+  crispsa: "crispsadsavitz"
   crispreg: "crispreg"
 
 on:
@@ -29,7 +29,7 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           az group create --name $rgname --location eastus2
-          az group deployment create --resource-group $rgname --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
+          #az group deployment create --resource-group $rgname --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
           az group deployment create --resource-group $rgname --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
           az group deployment create --resource-group $rgname --template-file arm_templates/acr.json --parameters registry_name=$crispreg
 
