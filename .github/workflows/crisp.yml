@@ -31,7 +31,7 @@ jobs:
         run: |
           az group create --name $crisprg --location eastus2
           #az group deployment create --resource-group $crisprg --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
-          az group deployment create --resource-group $crisprg --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
+          #az group deployment create --resource-group $crisprg --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
           #az group deployment create --resource-group $crisprg --template-file arm_templates/acr.json --parameters registry_name=$crispreg
 
       - name: Build the Docker image
