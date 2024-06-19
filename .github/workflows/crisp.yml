@@ -19,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Say Hello
-        run: echo "hello"
 
       - name: Set up Azure CLI
         uses: azure/login@v1
@@ -36,7 +34,6 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          echo "hello"
           az acr login --name $crispreg
           docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:$dockertag
           docker push $crispreg.azurecr.io/crisp:$dockertag
