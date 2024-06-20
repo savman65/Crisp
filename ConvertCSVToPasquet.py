@@ -18,10 +18,13 @@ local_target_directory = "./blob_files/"
 saPollingIntervalSeconds = 1000
 #blobName = os.getenv('crispsablobname')
 
-
+blobRecord = []
+blobsToProcessNow = []
 
 def download_blob(storage_account_name, storage_account_key, container_name, local_target_directory):
     # Construct the BlobServiceClient using the account key
+    global blobRecord
+    global blobsToProcessNow
     blob_service_client = BlobServiceClient(
         account_url=f"https://{storage_account_name}.blob.core.windows.net",
         credential=storage_account_key
@@ -52,6 +55,8 @@ def download_blob(storage_account_name, storage_account_key, container_name, loc
         print(f"converting the following blobs to parquet now: {blobsToProcessNow}")
 
 def upload_blob_to_azure(connection_string, container_name, blob_name, parquet_file_path):
+    global blobRecord
+    global blobsToProcessNow
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(container_name)
     blob_client = container_client.get_blob_client(blob_name)
@@ -60,8 +65,6 @@ def upload_blob_to_azure(connection_string, container_name, blob_name, parquet_f
         blob_client.upload_blob(data, overwrite=True)
 
 if __name__ == "__main__":
-    blobRecord = []
-    blobsToProcessNow = []
     while True:
         #try: 
         download_blob(storage_account_name, storage_account_key, source_container_name, local_target_directory)
