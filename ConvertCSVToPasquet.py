@@ -9,9 +9,11 @@ import time
 
 storage_account_name = os.getenv('crispsa')
 storage_account_key = os.getenv('crispsakey')
+
 #for local testing
 #storage_account_key = ""
-#storage_account_name = ""
+#storage_account_name = "crispsadsavitz"
+
 source_container_name = "csv"
 destination_container_name = "parquet"
 local_target_directory = "./blob_files/"
@@ -49,8 +51,8 @@ def download_blob(storage_account_name, storage_account_key, container_name, loc
         print(f"Downloaded {blob.name} to {download_file_path}")
         
         if blob.name not in blobRecord:
-            blobsToProcessNow += blob.name
-            blobRecord += blob.name
+            blobsToProcessNow.append(blob.name)
+            blobRecord.append(blob.name)
         print(f"blob recorded so far: {blobRecord}")
         print(f"converting the following blobs to parquet now: {blobsToProcessNow}")
 
