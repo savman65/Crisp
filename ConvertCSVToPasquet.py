@@ -11,14 +11,14 @@ storage_account_name = os.getenv('crispsa')
 storage_account_key = os.getenv('crispsakey')
 #for local testing
 #storage_account_key = ""
+#storage_account_name = ""
 source_container_name = "csv"
 destination_container_name = "parquet"
 local_target_directory = "./blob_files/"
 saPollingIntervalSeconds = 1000
 #blobName = os.getenv('crispsablobname')
 
-blobRecord = []
-blobsToProcessNow = []
+
 
 def download_blob(storage_account_name, storage_account_key, container_name, local_target_directory):
     # Construct the BlobServiceClient using the account key
@@ -60,6 +60,8 @@ def upload_blob_to_azure(connection_string, container_name, blob_name, parquet_f
         blob_client.upload_blob(data, overwrite=True)
 
 if __name__ == "__main__":
+    blobRecord = []
+    blobsToProcessNow = []
     while True:
         #try: 
         download_blob(storage_account_name, storage_account_key, source_container_name, local_target_directory)
