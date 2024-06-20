@@ -30,10 +30,10 @@ jobs:
 
       - name: Deploy Infrastructure
         run: |
-          #az group create --name $crisprg --location eastus2
-          #az group deployment create --resource-group $crisprg --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
-          #az group deployment create --resource-group $crisprg --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
-          #az group deployment create --resource-group $crisprg --template-file arm_templates/acr.json --parameters registry_name=$crispreg
+          az group create --name $crisprg --location eastus2
+          az group deployment create --resource-group $crisprg --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
+          az group deployment create --resource-group $crisprg --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
+          az group deployment create --resource-group $crisprg --template-file arm_templates/acr.json --parameters registry_name=$crispreg
 
       - name: Build Image
         run: |
@@ -97,4 +97,5 @@ jobs:
 
           az storage blob delete --account-name $crispsa --container-name csv --name $csvFile
           az storage blob delete --account-name $crispsa --container-name parquet --name $parquetFile
+          echo "the csv to parquet test was successful"
 
