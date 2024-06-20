@@ -34,10 +34,8 @@ def download_blob(storage_account_name, storage_account_key, container_name, loc
         credential=storage_account_key
     )
 
-    # Get the container client
     container_client = blob_service_client.get_container_client(container_name)
 
-    # List all blobs in the container
     blob_list = container_client.list_blobs()
 
     # Download each blob to local directory
@@ -92,7 +90,7 @@ if __name__ == "__main__":
 
             upload_blob_to_azure(connection_string, destination_container_name, f"{blobNoExt}.parquet", f"./{local_target_directory}/{blobNoExt}.parquet")
 
-        blobRecord = []
+        blobsToProcessNow = []
         #except Exception as e:
         #    print("failed")
         time.sleep(saPollingIntervalSeconds)
