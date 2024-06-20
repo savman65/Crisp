@@ -32,8 +32,9 @@ brew install azcopy
 
 ```
 #Variables for you to update
-saskey="sv=2022-11-02&ss=b&srt=sco&sp=rwdlaciytfx&se=2024-07-20T13:09:06Z&st=2024-06-20T05:09:06Z&spr=https&sig=u3dv7%2FyP6igZH132wv%2BcC34Xa0M8seGAg%2BU%2Fhria0sM%3D"
-csvFile="crispa3.csv"
+#ex: saskey="sv=..."
+saskey="your-storage-account-key"
+csvFile="csvFile"
 
 #The script. Do not edit
 crispsa="crispsadsavitz"
