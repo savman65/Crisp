@@ -86,7 +86,7 @@ jobs:
           done
           #kubectl logs
 
-      - name: Install AzCopy
+      - name: Test 
         run: |
           wget -O azcopy.tar https://aka.ms/downloadazcopy-v10-linux
           tar -xf azcopy.tar --strip-components=1
@@ -106,3 +106,7 @@ jobs:
           parquetFile=$(echo $csvFile | sed s/csv/parquet/g)
           az storage blob list --account-name $crispsa --container-name parquet --output table
           azcopy copy "https://$crispsa.blob.core.windows.net/parquet/$parquetFile?$saskey" .
+
+          az storage blob delete --account-name $crispsa --container-name csv --name crisptest.csv
+          az storage blob delete --account-name $crispsa --container-name parquet --name crisptest.parquet
+
