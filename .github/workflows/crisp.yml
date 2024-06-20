@@ -85,3 +85,24 @@ jobs:
             kubectl logs $POD
           done
           #kubectl logs
+
+      - name: Install AzCopy
+        run: |
+          wget -O azcopy.tar https://aka.ms/downloadazcopy-v10-linux
+          tar -xf azcopy.tar --strip-components=1
+          sudo mv azcopy /usr/local/bin/
+
+          saskey=$(az storage account generate-sas --permissions acdlpruw --account-name $crispsa --services bqtf --resource-types sco --expiry 2024-07-30T00:00:00Z --output tsv)
+
+          pathToCSV="test"
+          csvFile="crispa5.csv"
+
+          azcopy copy "$pathToCSV/$csvFile" "https://$crispsa.blob.core.windows.net/csv/$csvFile?$saskey"
+          echo "the following is the list of csv files"
+          az storage blob list --account-name $crispsa --container-name csv --output table
+          echo "sleeping for 10 seconds for parquet processing..."
+          sleep 10
+          echo "the following is the list of parquet files"
+          parquetFile=$(echo $csvFile | sed s/csv/parquet/g)
+          az storage blob list --account-name $crispsa --container-name parquet --output table
+          azcopy copy "https://$crispsa.blob.core.windows.net/parquet/$parquetFile?$saskey" .

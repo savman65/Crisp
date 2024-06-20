@@ -1,6 +1,5 @@
 # Crisp App
 
-## Assumptions:
 
 ## Usage: 
 Navigate to https://github.com/savman65/Crisp/actions/workflows/crisp.yml for the github action which deploys the required azure infrastructure (storage account, acr, and aks), builds and pushes the python docker image, and then deploys the python app to kubernetes.
@@ -57,3 +56,4 @@ Note: the blob_files directory (which is a script dependancy) contains a placeho
 
 ## Notes
 The commits in the git repo come from an author named "Matt Savitz". I'm on vacation now so I'm using my father (Matt's) laptop :)
+The only resource that isn't managed in the github workflow is the service principle used for github to authenticate to azure. This is to avoid a "chicken and egg" problem. The deployment to azure depends on the service principle.
