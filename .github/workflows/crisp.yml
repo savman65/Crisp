@@ -1,5 +1,9 @@
 name: Deploy Crisp App
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   dockertag: "0.2"
   crisprg: "crisprg"
