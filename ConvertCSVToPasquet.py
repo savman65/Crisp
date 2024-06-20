@@ -17,8 +17,8 @@ local_target_directory = "./blob_files/"
 saPollingIntervalSeconds = 5
 #blobName = os.getenv('crispsablobname')
 
-def blobRecord = []
-def blobsToProcessNow = []
+blobRecord = []
+blobsToProcessNow = []
 
 def download_blob(storage_account_name, storage_account_key, container_name, local_target_directory):
     # Construct the BlobServiceClient using the account key
