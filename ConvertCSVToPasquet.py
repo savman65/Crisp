@@ -45,7 +45,7 @@ def download_blob(storage_account_name, storage_account_key, container_name, loc
 
         print(f"Downloaded {blob.name} to {download_file_path}")
         
-        if blob.name not in blobRecord
+        if blob.name not in blobRecord:
             blobsToProcessNow += blob.name
             blobRecord += blob.name
         print(f"blob recorded so far: {blobRecord}")
