@@ -1,3 +1,5 @@
+#Description: download newly added blobs in the csv folder, convert the blobs to parquet, push the parquet blobs back up
+
 import pandas as pd
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
@@ -6,7 +8,7 @@ import os
 
 import time
 
-
+#Vars
 storage_account_name = os.getenv('crispsa')
 storage_account_key = os.getenv('crispsakey')
 source_container_name = "csv"
@@ -19,8 +21,12 @@ connection_string = f"DefaultEndpointsProtocol=https;AccountName={storage_accoun
 #storage_account_key = ""
 #storage_account_name = "crispsadsavitz"
 
+#blobRecord: the variable holds all blobs that have been processed throughout the life of the container
 blobRecord = []
+#blobsToProcessNow: the script iterates every $saPollingIntervalSeconds seconds to look for new blobs to process by diffing the current state of the storage account and $blobRecord. This diff is stored in blobsToProcessNow 
 blobsToProcessNow = []
+
+### Start Functions
 
 #Download all blobs in the container
 def download_blobs(storage_account_name, storage_account_key, container_name, local_target_directory):
@@ -64,6 +70,8 @@ def upload_blob_to_azure(connection_string, container_name, blob_name, parquet_f
     with open(parquet_file_path, "rb") as data:
         blob_client.upload_blob(data, overwrite=True)
 
+### End Functions
+
 if __name__ == "__main__":
     while True:
         download_blobs(storage_account_name, storage_account_key, source_container_name, local_target_directory)
@@ -80,6 +88,7 @@ if __name__ == "__main__":
 
             upload_blob_to_azure(connection_string, destination_container_name, f"{blobNoExt}.parquet", f"./{local_target_directory}/{blobNoExt}.parquet")
 
+        #reset blobsToProcessNow for the next iteration
         blobsToProcessNow = []
         
         time.sleep(saPollingIntervalSeconds)
