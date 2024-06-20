@@ -10,7 +10,6 @@ env:
   crispaks: "crispaks"
   crispsa: "crispsadsavitz"
   crispreg: "crispreg"
-  crispsablobname: "crisp"
 
 on:
   push:
@@ -32,10 +31,9 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           az group create --name $crisprg --location eastus2
-          #az group deployment create --resource-group $crisprg --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
-          #az group deployment create --resource-group $crisprg --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
-          #az group deployment create --resource-group $crisprg --template-file arm_templates/acr.json --parameters registry_name=$crispreg
-          #az storage account update --name $crispsa --resource-group $crisprg --default-action Allow --bypass AzureServices
+          az group deployment create --resource-group $crisprg --template-file arm_templates/aks.json --parameters aks_cluster_name=$crispaks
+          az group deployment create --resource-group $crisprg --template-file arm_templates/sa.json --parameters storage_account_name=$crispsa
+          az group deployment create --resource-group $crisprg --template-file arm_templates/acr.json --parameters registry_name=$crispreg
 
       - name: Build Image
         run: |
@@ -49,8 +47,6 @@ jobs:
 
       - name: Set infrastructural secrets
         run: |
-          kubectl get pods --all-namespaces
-
           kubectl get secret acrsecret >/dev/null 2>&1
           if [ $? -ne 0 ]; then
             echo "Secret acrsecret does not exist. Creating it..."
@@ -70,21 +66,11 @@ jobs:
 
       - name: Create Crisp k8s deployment
         run: |
-          kubectl get pods --all-namespaces
           sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
           sed -i "s:{{tag}}:$dockertag:" deployment.yaml
           sed -i "s:{{crispsa}}:$crispsa:" deployment.yaml
-          sed -i "s:{{crispsablobname}}:$crispsablobname:" deployment.yaml
           kubectl delete -f deployment.yaml
           kubectl apply -f deployment.yaml
-          sleep 20
-          PODS=$(kubectl get pods -l app=crisp -o jsonpath='{.items[*].metadata.name}')
-          # Loop through each pod and get logs
-          for POD in $PODS; do
-            echo "Logs for pod: $POD"
-            kubectl logs $POD
-          done
-          #kubectl logs
 
       - name: Test 
         run: |

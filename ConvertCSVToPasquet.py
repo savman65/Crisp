@@ -1,4 +1,7 @@
-#Description: download newly added blobs in the csv folder, convert the blobs to parquet, push the parquet blobs back up
+'''
+Description: The python image is a script running on an infinite loop that polls the storage account on a specified interval, then uses a simple name comparison to assess if new csv blobs have been added to the storage account's "csv" container, at which point it will convert those new csv blobs to parquet and then push the parquet blobs up to the storage account's "parquet" container.
+
+'''
 
 import pandas as pd
 
