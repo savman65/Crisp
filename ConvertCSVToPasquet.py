@@ -17,7 +17,7 @@ storage_account_key = os.getenv('crispsakey')
 source_container_name = "csv"
 destination_container_name = "parquet"
 local_target_directory = "./blob_files/"
-saPollingIntervalSeconds = 1000
+saPollingIntervalSeconds = 5
 connection_string = f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
 #blobName = os.getenv('crispsablobname')
 
@@ -72,9 +72,6 @@ if __name__ == "__main__":
     while True:
         #try: 
         download_blob(storage_account_name, storage_account_key, source_container_name, local_target_directory)
-
-       
-        
 
         for blob in blobsToProcessNow:
             # Read CSV file into pandas DataFrame
