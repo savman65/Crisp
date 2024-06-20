@@ -21,8 +21,6 @@ spec:
         - containerPort: 80
         imagePullPolicy: Always
         env:
-        - name: crispsablobname
-          value: {{crispsablobname}}
         - name: crispsa
           value: {{crispsa}}
         - name: crispsakey

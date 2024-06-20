@@ -8,9 +8,10 @@ Navigate to https://github.com/savman65/Crisp/actions/workflows/crisp.yml to run
 - runs a test by pushing a sample csv to the storage account and then verifies that it can download the corresponding parquet file
 
 ## External User Test
+The following is a test that you can perform with your own csv on your local machine. The script below will copy a csv file to the storage account using azcopy, then it will use azcopy again to retrieve the corresponding parquet file
+
 You'll need a sas key to the storage account key (shared in my email)
 
-The following script will copy a csv file to the storage account using azcopy, then it will use azcopy again to retrieve the corresponding parquet file
 
 ### MAC instructions:
 it is assumed you have brew installed on your mac. 
@@ -24,15 +25,15 @@ brew install azcopy
 ToDo
 
 ### Test Script
-Please replace <your-storage-account-key> below with the storage account key that I sent you
-Please create a csv file and cd to its directory. Replace <csvFile> below with the name of the csv file (ex: test.csv). Then run the following code
+Please replace '<your-storage-account-key>' below with the storage account key that I sent you.
+Please create a csv file and cd to its directory. Replace '<csvFile>' below with the name of the csv file (ex: test.csv). Then run the following code
 
 ```
 #Variables for you to update
 saskey="<your-storage-account-key>"
 csvFile="<csvFile>"
 
-#The script...
+#The script. Do not edit
 azcopy copy "$csvFile" "https://crispsadsavitz.blob.core.windows.net/csv/$csvFile?$saskey"
 echo "the following is the list of csv files"
 az storage blob list --account-name crispsadsavitz --container-name csv --output table
@@ -45,7 +46,7 @@ azcopy copy "https://crispsadsavitz.blob.core.windows.net/parquet/$parquetFile?$
 
 ```
 
-## Some Todo items I thought of
+## Some Todo Items I Thought Of
 - an "event-based" trigger for the application to do parquet conversions so we can remove the naiive logic in the python script
 - harden the azure resources (locking down networking, least privilege for service accounts, etc)
 - better documentation

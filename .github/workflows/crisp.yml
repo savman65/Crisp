@@ -66,6 +66,7 @@ jobs:
 
       - name: Create Crisp k8s deployment
         run: |
+          #Performs some primitive templating
           sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
           sed -i "s:{{tag}}:$dockertag:" deployment.yaml
           sed -i "s:{{crispsa}}:$crispsa:" deployment.yaml
@@ -74,6 +75,7 @@ jobs:
 
       - name: Test 
         run: |
+          #runs a test by pushing a sample csv to the storage account using az copy and then verifies that it can download the corresponding parquet file. Then deletes the testing blobs
           wget -O azcopy.tar https://aka.ms/downloadazcopy-v10-linux
           tar -xf azcopy.tar --strip-components=1
           sudo mv azcopy /usr/local/bin/
