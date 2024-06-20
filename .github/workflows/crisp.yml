@@ -74,6 +74,8 @@ jobs:
           sed -i "s:{{crispsa}}:$crispsa:" deployment.yaml
           existingDeployment=$(kubectl get deployment crisp --ignore-not-found)
           if [ -z "$existingDeployment" ]; then
+            echo "no deployment to delete"
+          else
             kubectl delete -f deployment.yaml
           fi
           kubectl apply -f deployment.yaml
