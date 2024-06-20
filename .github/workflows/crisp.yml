@@ -37,7 +37,7 @@ jobs:
           #az group deployment create --resource-group $crisprg --template-file arm_templates/acr.json --parameters registry_name=$crispreg
           #az storage account update --name $crispsa --resource-group $crisprg --default-action Allow --bypass AzureServices
 
-      - name: Build the Docker image
+      - name: Build Image
         run: |
           az acr login --name $crispreg
           docker build . --file Dockerfile --tag $crispreg.azurecr.io/crisp:$dockertag
@@ -47,7 +47,7 @@ jobs:
         run: |
           az aks get-credentials --resource-group $crisprg --name $crispaks --overwrite-existing
 
-      - name: Run kubectl command
+      - name: Set infrastructural secrets
         run: |
           kubectl get pods --all-namespaces
 
@@ -68,7 +68,7 @@ jobs:
             echo "Secret crispsakey-secret already exists. Skipping creation."
           fi
 
-      - name: create k8s deployment
+      - name: Create Crisp k8s deployment
         run: |
           kubectl get pods --all-namespaces
           sed -i "s:{{crispacr}}:$crispreg:" deployment.yaml
