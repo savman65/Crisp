@@ -32,19 +32,19 @@ brew install azcopy
 
 ```
 #Variables for you to update
-saskey="your-storage-account-key"
-csvFile="csvFile"
+saskey="sv=2022-11-02&ss=b&srt=sco&sp=rwdlaciytfx&se=2024-07-20T13:09:06Z&st=2024-06-20T05:09:06Z&spr=https&sig=u3dv7%2FyP6igZH132wv%2BcC34Xa0M8seGAg%2BU%2Fhria0sM%3D"
+csvFile="crispa3.csv"
 
 #The script. Do not edit
 crispsa="crispsadsavitz"
 azcopy copy "$csvFile" "https://$crispsa.blob.core.windows.net/csv/$csvFile?$saskey"
 echo "the following is the list of csv files"
-az storage blob list --account-name $crispsa --container-name csv --output table
+azcopy list "https://$crispsa.blob.core.windows.net/csv?$saskey" --running-tally
 echo "sleeping for 10 seconds for parquet processing..."
 sleep 10
 echo "the following is the list of parquet files"
 parquetFile=$(echo $csvFile | sed s/csv/parquet/g)
-az storage blob list --account-name $crispsa --container-name parquet --output table
+azcopy list "https://$crispsa.blob.core.windows.net/parquet?$saskey" --running-tally
 azcopy copy "https://$crispsa.blob.core.windows.net/parquet/$parquetFile?$saskey" .
 
 ```
