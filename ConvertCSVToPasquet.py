@@ -61,33 +61,33 @@ def upload_blob_to_azure(connection_string, container_name, blob_name, parquet_f
 
 if __name__ == "__main__":
     while True:
-        try: 
-            download_blob(storage_account_name, storage_account_key, source_container_name, local_target_directory)
+        #try: 
+        download_blob(storage_account_name, storage_account_key, source_container_name, local_target_directory)
 
-            # Read CSV file into pandas DataFrame
-            df = pd.read_csv(f"{local_target_directory}/{blobName}.csv")
+        # Read CSV file into pandas DataFrame
+        df = pd.read_csv(f"{local_target_directory}/{blobName}.csv")
 
-            # Specify the output Parquet file
-            #parquet_file = '{blobName}.parquet'
+        # Specify the output Parquet file
+        #parquet_file = '{blobName}.parquet'
 
-            #pyarrow for Parquet writing
-            df.to_parquet(f"{local_target_directory}/{blobName}.parquet", engine='pyarrow')
+        #pyarrow for Parquet writing
+        df.to_parquet(f"{local_target_directory}/{blobName}.parquet", engine='pyarrow')
 
-            # Option 2: Using fastparquet for Parquet writing
-            # Ensure to have fastparquet installed: pip install fastparquet
-            # df.to_parquet(parquet_file, engine='fastparquet')
+        # Option 2: Using fastparquet for Parquet writing
+        # Ensure to have fastparquet installed: pip install fastparquet
+        # df.to_parquet(parquet_file, engine='fastparquet')
 
-            print(f"CSV file '{blobName}.csv' converted to Parquet file '{blobName}.parquet' successfully.")
+        print(f"CSV file '{blobName}.csv' converted to Parquet file '{blobName}.parquet' successfully.")
 
-            connection_string = f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
+        connection_string = f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
 
-            for blob in blobsToProcessNow:
-                blobNoExt = blob.replace(".csv", "")
-                upload_blob_to_azure(connection_string, destination_container_name, f"{blobNoExt}.parquet", f"./{local_target_directory}/{blobNoExt}.parquet")
+        for blob in blobsToProcessNow:
+            blobNoExt = blob.replace(".csv", "")
+            upload_blob_to_azure(connection_string, destination_container_name, f"{blobNoExt}.parquet", f"./{local_target_directory}/{blobNoExt}.parquet")
 
-            blobRecord = []
-        except Exception as e:
-            print("failed")
+        blobRecord = []
+        #except Exception as e:
+        #    print("failed")
         time.sleep(saPollingIntervalSeconds)
 
 
